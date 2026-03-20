@@ -43,7 +43,11 @@ try {
     $clientId = (int)$data['uid'];
 
     // 3. Autenticação Nativa WHMCS 9
-    $userRelation = Capsule::table('tblusers_clients')->where('client_id', $clientId)->first();
+    // CORREÇÃO: Garante que pega o dono (owner) da conta do cliente
+    $userRelation = Capsule::table('tblusers_clients')
+        ->where('client_id', $clientId)
+        ->orderBy('owner', 'desc')
+        ->first();
 
     if ($userRelation && $user = \WHMCS\User\User::find($userRelation->auth_user_id)) {
         
@@ -55,16 +59,15 @@ try {
         // Login Oficial
         \Auth::login($user);
 
-        // Fixação de Sessão (Vital para WHMCS 9)
+        // Fixação de Sessão
         Session::set("uid", $clientId);
         Session::set("user_id", $user->id);
         Session::set("upw", $user->password);
         
-        // [IMPORTANTE] Força a escrita no disco antes do redirect
-        // Isso é o que faz funcionar no Nginx/Cloudflare sem precisar do JS
+        // Força a escrita no disco antes do redirect
         session_write_close();
         
-        // Redirecionamento Direto (Sem tela de carregamento)
+        // Redirecionamento Direto
         header("Location: clientarea.php");
         exit;
     }
