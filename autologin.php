@@ -43,7 +43,7 @@ try {
     $clientId = (int)$data['uid'];
 
     // 3. Autenticação Nativa WHMCS 9
-    // CORREÇÃO: Garante que pega o dono (owner) da conta do cliente
+    // CORREÇÃO: OrderBy garante que pegamos o Usuário que é o "Dono" da conta e não apenas o primeiro associado.
     $userRelation = Capsule::table('tblusers_clients')
         ->where('client_id', $clientId)
         ->orderBy('owner', 'desc')
@@ -59,12 +59,12 @@ try {
         // Login Oficial
         \Auth::login($user);
 
-        // Fixação de Sessão
-        Session::set("uid", $clientId);
-        Session::set("user_id", $user->id);
+        // Fixação de Sessão (Vital para WHMCS 9)
+        Session::set("uid", $clientId); // Define a Conta/Cliente ativo
+        Session::set("user_id", $user->id); // Define o Usuário Autenticado
         Session::set("upw", $user->password);
         
-        // Força a escrita no disco antes do redirect
+        // [IMPORTANTE] Força a escrita no disco antes do redirect
         session_write_close();
         
         // Redirecionamento Direto
