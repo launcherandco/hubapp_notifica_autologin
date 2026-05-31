@@ -87,6 +87,7 @@ O sistema monitora os seguintes eventos do WHMCS e dispara as mensagens configur
 
 ### 💰 Financeiro
 * **Fatura Gerada**: Envia o link e vencimento assim que a fatura é criada.
+* **Fatura a Vencer**: Aviso automático enviado nos dias anteriores à data de vencimento.
 * **Pagamento Confirmado**: Agradecimento automático após a baixa.
 * **Lembretes de Atraso**: Régua de cobrança completa (1º, 2º e 3º aviso antes da suspensão).
 
