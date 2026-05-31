@@ -50,50 +50,18 @@ function hubapp_notifica_output($vars) {
     require_once __DIR__ . '/lib/HubAppClient.php';
     
     $templates = [
-        'InvoiceCreated' => [
-            'name' => 'Fatura Gerada', 
-            'default' => 'Olá {firstname}, sua fatura #{invoiceid} de R$ {total} foi gerada. Vencimento: {duedate}. ▶️ Acesse s/ senha: {autologin_url}'
-        ],
-        'InvoicePaid' => [
-            'name' => 'Pagamento Confirmado', 
-            'default' => '✅ Obrigado {firstname}! Recebemos o pagamento da fatura #{invoiceid}. Seus serviços seguem ativos.'
-        ],
-        'InvoicePaymentReminderFirst' => [
-            'name' => '1º Aviso de Atraso', 
-            'default' => '⚠️ Olá {firstname}, lembramos que a fatura #{invoiceid} venceu em {duedate}. ⚡ Pague agora s/ senha: {autologin_url}'
-        ],
-        'InvoicePaymentReminderSecond' => [
-            'name' => '2º Aviso de Atraso', 
-            'default' => '⚠️ Oi {firstname}, o pagamento da fatura #{invoiceid} ainda não consta. ▶️ Regularize em 1 clique: {autologin_url}'
-        ],
-        'InvoicePaymentReminderThird' => [
-            'name' => 'Aviso Crítico (3º)', 
-            'default' => '❌ ATENÇÃO {firstname}! A fatura #{invoiceid} está com atraso crítico. Evite o corte acessando agora: {autologin_url}'
-        ],
-        'TicketAdminReply' => [
-            'name' => 'Resposta em Ticket', 
-            'default' => 'ℹ️ Olá {firstname}, seu ticket #{ticketno} ({ticketsubject}) foi respondido. ✉️ Veja direto: {autologin_url}'
-        ],
-        'TicketOpenAdmin' => [
-            'name' => 'Admin: Novo Ticket', 
-            'default' => '⚠️ Novo Ticket: {subject} | Cliente: {firstname} | Prioridade: {priority}'
-        ],
-        'AfterModuleCreate' => [
-            'name' => 'Serviço Ativado', 
-            'default' => '✅ Boas notícias {firstname}! Seu serviço {domain} está ativo. ⭐ Painel de Controle: {autologin_url}'
-        ],
-        'AfterModuleSuspend' => [
-            'name' => 'Serviço Suspenso', 
-            'default' => '❌ Atenção {firstname}, o serviço {domain} foi suspenso. ▶️ Reative sua conta aqui: {autologin_url}'
-        ],
-        'DomainRenewalNotice' => [
-            'name' => 'Expiração de Domínio', 
-            'default' => 'ℹ️ Olá {firstname}, seu domínio {domain} expira em {x} dias ({expirydate}). ⚡ Renove agora: {autologin_url}'
-        ],
-        'AdminLogin' => [
-            'name' => 'Alerta de Login Admin', 
-            'default' => '⚠️ Segurança: O usuário {username} acessou o painel administrativo do WHMCS neste momento.'
-        ],
+        'InvoiceCreated' => ['name' => 'Fatura Gerada', 'default' => 'Olá {firstname}, sua fatura #{invoiceid} de R$ {total} foi gerada. Vencimento: {duedate}. Pague aqui: {invoice_url}'],
+        'InvoiceUnpaid' => ['name' => 'Fatura a Vencer', 'default' => '⏳ Olá {firstname}, lembramos que sua fatura #{invoiceid} vencerá no dia {duedate}. Acesse o link para pagamento: {invoice_url}'],
+        'InvoicePaid' => ['name' => 'Pagamento Confirmado', 'default' => '✅ Obrigado {firstname}! Recebemos o pagamento da fatura #{invoiceid}. Seus serviços seguem ativos.'],
+        'InvoicePaymentReminderFirst' => ['name' => '1º Aviso de Atraso', 'default' => '⚠️ Olá {firstname}, lembramos que a fatura #{invoiceid} venceu em {duedate}. Evite bloqueios: {invoice_url}'],
+        'InvoicePaymentReminderSecond' => ['name' => '2º Aviso de Atraso', 'default' => '⚠️ Oi {firstname}, o pagamento da fatura #{invoiceid} ainda não consta em nosso sistema. Precisa de ajuda?'],
+        'InvoicePaymentReminderThird' => ['name' => 'Aviso Crítico (3º)', 'default' => '❌ ATENÇÃO {firstname}! A fatura #{invoiceid} está com atraso crítico. O serviço será suspenso em breve.'],
+        'TicketAdminReply' => ['name' => 'Resposta em Ticket', 'default' => 'ℹ️ Olá {firstname}, seu ticket #{ticketno} ({ticketsubject}) foi respondido. Veja na sua área do cliente.'],
+        'TicketOpenAdmin' => ['name' => 'Admin: Novo Ticket', 'default' => '⚠️ Novo Ticket: {subject} | Cliente: {firstname} | Prioridade: {priority}'],
+        'AfterModuleCreate' => ['name' => 'Serviço Ativado', 'default' => '✅ Boas notícias {firstname}! Seu serviço {domain} está ativo. User: {username} | Pass: {password}'],
+        'AfterModuleSuspend' => ['name' => 'Serviço Suspenso', 'default' => '❌ Atenção {firstname}, informamos que o serviço {domain} foi suspenso por pendências.'],
+        'DomainRenewalNotice' => ['name' => 'Expiração de Domínio', 'default' => 'ℹ️ Olá {firstname}, seu domínio {domain} expira em {x} dias ({expirydate}). Renove agora para não perder!'],
+        'AdminLogin' => ['name' => 'Alerta de Login Admin', 'default' => '⚠️ Segurança: O usuário {username} acessou o painel administrativo do WHMCS neste momento.'],
     ];
 
     if (isset($_POST['save_templates'])) {
